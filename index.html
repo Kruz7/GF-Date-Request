@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gizemm</title>
+  <style>
+    :root {
+      --bg1: #0f1020;
+      --bg2: #1c1f4a;
+      --accent: #ff4d9e;
+      --accent2: #7d5cff;
+      --text: #f7f8ff;
+      --ok: #51f0b5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      color: var(--text);
+      background: radial-gradient(circle at 20% 20%, #303266 0%, transparent 35%),
+        radial-gradient(circle at 80% 30%, #3a1650 0%, transparent 30%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      display: grid;
+      place-items: center;
+    }
+
+    .stars, .hearts, .confetti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: #fff;
+      opacity: 0.7;
+      animation: twinkle 2.2s infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { transform: scale(1); opacity: 0.3; }
+      50% { transform: scale(2.2); opacity: 1; }
+    }
+
+    .card {
+      width: min(92vw, 640px);
+      padding: 32px 24px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 20px 80px rgba(0, 0, 0, 0.45);
+      text-align: center;
+      position: relative;
+      z-index: 5;
+      animation: floatCard 4s ease-in-out infinite;
+    }
+
+    @keyframes floatCard {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    h1 {
+      font-size: clamp(30px, 5vw, 48px);
+      line-height: 1.1;
+      margin-bottom: 10px;
+      text-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    p.subtitle {
+      opacity: 0.95;
+      font-size: clamp(15px, 2.6vw, 19px);
+      margin-bottom: 24px;
+      min-height: 52px;
+    }
+
+    .question {
+      font-size: clamp(25px, 4.8vw, 42px);
+      margin-bottom: 28px;
+      font-weight: 700;
+    }
+
+    .btn-wrap {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(140px, 220px));
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      min-height: 96px;
+      margin-top: 4px;
+    }
+
+    .yes-zone, .no-zone {
+      position: relative;
+      width: 100%;
+      height: 86px;
+      display: grid;
+      place-items: center;
+    }
+
+    .btn-wrap.single {
+      grid-template-columns: minmax(180px, 240px);
+    }
+
+    .btn-wrap.single .yes-zone {
+      grid-column: 1;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      border-radius: 999px;
+      width: 170px;
+      height: 54px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      font-size: 18px;
+      font-weight: 700;
+      transition: box-shadow 0.2s ease, filter 0.2s ease;
+      transform-origin: center center;
+      transform: none;
+    }
+
+    .yes {
+      background: linear-gradient(120deg, #4cffc2, #5ae3ff);
+      color: #0f1328;
+      box-shadow: 0 8px 24px rgba(89, 236, 198, 0.45);
+    }
+
+    .yes:hover { box-shadow: 0 8px 24px rgba(89, 236, 198, 0.45); filter: none; }
+
+    .no {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .final {
+      display: none;
+      margin-top: 14px;
+      font-size: clamp(20px, 4vw, 30px);
+      color: var(--ok);
+      font-weight: 700;
+      text-shadow: 0 0 18px rgba(81, 240, 181, 0.55);
+      animation: popIn 0.9s ease both;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.6); opacity: 0; }
+      60% { transform: scale(1.12); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 18px;
+      animation: rise 2.8s linear forwards;
+      filter: drop-shadow(0 0 8px rgba(255, 100, 170, 0.8));
+    }
+
+    @keyframes rise {
+      from { transform: translateY(0) scale(0.8); opacity: 1; }
+      to { transform: translateY(-120vh) scale(1.4); opacity: 0; }
+    }
+
+    .piece {
+      position: absolute;
+      width: 9px;
+      height: 14px;
+      opacity: 0.92;
+      animation: confettiFall 2.6s linear forwards;
+    }
+
+    @keyframes confettiFall {
+      from { transform: translateY(-20px) rotate(0deg); }
+      to { transform: translateY(110vh) rotate(720deg); }
+    }
+
+    .pulse-ring {
+      position: absolute;
+      border: 2px solid rgba(255,255,255,0.45);
+      border-radius: 50%;
+      animation: ring 1.2s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes ring {
+      from { transform: scale(0.2); opacity: 0.9; }
+      to { transform: scale(1.8); opacity: 0; }
+    }
+
+    .love-scene {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: none;
+      background: #fff;
+      color: #111;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      gap: 12px;
+    }
+
+    .love-heart {
+      font-size: clamp(74px, 12vw, 140px);
+      color: #e61b3c;
+      animation: heartBeat 1s infinite ease-in-out;
+      line-height: 1;
+    }
+
+    .love-text {
+      font-size: clamp(28px, 4.5vw, 52px);
+      font-weight: 700;
+      color: #c1102d;
+    }
+
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(1.1); }
+      50% { transform: scale(0.95); }
+      75% { transform: scale(1.12); }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+  <div class="hearts" id="hearts"></div>
+  <div class="confetti" id="confetti"></div>
+
+  <main class="card" id="card">
+    <h1>Sana Bir Şey Söyleyeceğim</h1>
+    <p class="subtitle" id="subtitle"></p>
+    <div class="question" id="question">Küçük bir sürprize hazır mısın?</div>
+
+    <div class="btn-wrap" id="btnWrap">
+      <div class="yes-zone">
+        <button class="yes" id="yesBtn">Evett</button>
+      </div>
+      <div class="no-zone" id="noZone">
+        <button class="no" id="noBtn">Hayır</button>
+      </div>
+    </div>
+
+    <div class="final" id="finalMsg">Yuppii! En güzel "evet" buydu💘</div>
+  </main>
+
+  <div class="love-scene" id="loveScene">
+    <div class="love-heart" id="loveHeart">❤</div>
+    <div class="love-text" id="loveText">Seni seviyorum &lt;3</div>
+  </div>
+
+  <script>
+    const stars = document.getElementById("stars");
+    const hearts = document.getElementById("hearts");
+    const confetti = document.getElementById("confetti");
+    const subtitle = document.getElementById("subtitle");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const finalMsg = document.getElementById("finalMsg");
+    const question = document.getElementById("question");
+    const btnWrap = document.getElementById("btnWrap");
+    const card = document.getElementById("card");
+    const loveScene = document.getElementById("loveScene");
+    const loveHeart = document.getElementById("loveHeart");
+    const loveText = document.getElementById("loveText");
+
+    const lines = [
+      "Bugün sana içimden gelen bir şey söylemek istiyorum.",
+      "Bunu uzun zamandır doğru anı bekleyerek düşündüm.",
+      "Hazırsan asıl soruya geçiyorum..."
+    ];
+
+    let noClickCount = 0;
+    let typeIndex = 0;
+    let charIndex = 0;
+    let revealDone = false;
+    let accepted = false;
+    let isTransitioning = false;
+
+    function createStars() {
+      for (let i = 0; i < 90; i++) {
+        const s = document.createElement("span");
+        s.className = "star";
+        s.style.left = `${Math.random() * 100}%`;
+        s.style.top = `${Math.random() * 100}%`;
+        s.style.animationDelay = `${Math.random() * 2.2}s`;
+        s.style.opacity = `${0.2 + Math.random() * 0.8}`;
+        stars.appendChild(s);
+      }
+    }
+
+    function typeLine() {
+      if (typeIndex >= lines.length) return;
+      const current = lines[typeIndex];
+      subtitle.textContent = current.slice(0, charIndex++);
+      if (charIndex <= current.length) {
+        setTimeout(typeLine, 36);
+      } else {
+        setTimeout(() => {
+          charIndex = 0;
+          typeIndex++;
+          if (typeIndex < lines.length) typeLine();
+        }, 740);
+      }
+    }
+
+    function spawnHeart(x, y) {
+      const h = document.createElement("span");
+      h.className = "heart";
+      h.textContent = ["💗", "💖", "💘", "💕"][Math.floor(Math.random() * 4)];
+      h.style.left = `${x}px`;
+      h.style.top = `${y}px`;
+      h.style.fontSize = `${14 + Math.random() * 22}px`;
+      hearts.appendChild(h);
+      setTimeout(() => h.remove(), 2800);
+    }
+
+    function confettiBlast() {
+      const colors = ["#ff4d9e", "#7d5cff", "#4cffc2", "#ffe066", "#ffffff"];
+      for (let i = 0; i < 170; i++) {
+        const p = document.createElement("span");
+        p.className = "piece";
+        p.style.left = `${Math.random() * 100}%`;
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.animationDelay = `${Math.random() * 0.9}s`;
+        p.style.transform = `translateY(-20px) rotate(${Math.random() * 360}deg)`;
+        confetti.appendChild(p);
+        setTimeout(() => p.remove(), 2900);
+      }
+    }
+
+    function ringPulse(x, y) {
+      const ring = document.createElement("span");
+      const cardRect = card.getBoundingClientRect();
+      ring.className = "pulse-ring";
+      ring.style.left = `${x - cardRect.left - 30}px`;
+      ring.style.top = `${y - cardRect.top - 30}px`;
+      ring.style.width = "60px";
+      ring.style.height = "60px";
+      card.appendChild(ring);
+      setTimeout(() => ring.remove(), 1200);
+    }
+
+    function hideNoButton() {
+      noBtn.style.display = "none";
+      btnWrap.classList.add("single");
+      yesBtn.style.transform = "none";
+    }
+
+    function encoreCelebration() {
+      confettiBlast();
+      for (let i = 0; i < 16; i++) {
+        setTimeout(() => {
+          spawnHeart(Math.random() * window.innerWidth, window.innerHeight - 30);
+        }, i * 70);
+      }
+      finalMsg.textContent = "Bu anı unutmayalım, iyi ki varsın 💖";
+    }
+
+    function startLoveSequence() {
+      loveScene.style.display = "flex";
+      loveHeart.style.display = "block";
+      loveText.style.display = "block";
+    }
+
+    function yesAccepted() {
+      if (!revealDone) {
+        revealDone = true;
+        question.textContent = "Benimle çıkar mısın? 💖";
+        subtitle.textContent = "Cevabını merakla bekliyorum...";
+        yesBtn.textContent = "Evet";
+        noBtn.textContent = "Hayır";
+        noBtn.style.display = "inline-block";
+        btnWrap.classList.remove("single");
+        noBtn.style.left = "50%";
+        noBtn.style.top = "50%";
+        noBtn.style.transform = "translate(-50%, -50%)";
+        yesBtn.style.transform = "none";
+        ringPulse(window.innerWidth / 2, window.innerHeight / 2);
+        return;
+      }
+
+      if (accepted) {
+        encoreCelebration();
+        return;
+      }
+
+      if (isTransitioning) return;
+      isTransitioning = true;
+      accepted = true;
+      question.textContent = "Harika! Bu anı birlikte hatırlayalım";
+      finalMsg.style.display = "block";
+      noBtn.style.display = "none";
+      yesBtn.textContent = "Sonsuza dek EVET";
+      yesBtn.style.background = "linear-gradient(120deg,#ffe066,#51f0b5)";
+      card.style.display = "none";
+
+      startLoveSequence();
+    }
+
+    document.addEventListener("mousemove", (e) => {
+      if (Math.random() < 0.15) {
+        spawnHeart(e.clientX, e.clientY);
+      }
+    });
+
+    noBtn.addEventListener("mouseenter", hideNoButton);
+    yesBtn.addEventListener("click", yesAccepted);
+
+    createStars();
+    typeLine();
+  </script>
+</body>
+</html>
